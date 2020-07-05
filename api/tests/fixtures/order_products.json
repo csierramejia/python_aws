@@ -1,0 +1,26 @@
+[
+    {
+        "id": 10,
+        "order_id": 1,
+        "product_id": 1,
+        "name": "Huevos",
+        "quantity": 30,
+        "inventory": 50
+    },
+    {
+        "id": 9,
+        "order_id": 2,
+        "product_id": 5,
+        "name": "Galletas",
+        "quantity": 3,
+        "inventory": 0
+    },
+    {
+        "id": 8,
+        "order_id": 3,
+        "product_id": 2,
+        "name": "Harina",
+        "quantity": 3,
+        "inventory": 1
+    }
+]

@@ -1,0 +1,13 @@
+Flask
+pytest
+mock
+pymongo
+python-dateutil
+flask-cors
+numpy
+pandas
+requests
+scipy
+boto3
+Pillow
+opencv-contrib-python

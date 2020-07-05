@@ -1,0 +1,31 @@
+version: '3'
+services:
+  web:
+    links:
+      - mongo-db
+    volumes:
+      - "./app:/app"
+    build: .
+    ports:
+      - "5000:5000"
+
+    networks:
+      confincafe:
+        ipv4_address: 192.168.55.199
+
+  mongo-db:
+    image: mongo:3.2.20-jessie
+    volumes:
+       - ./data/mongo:/data/db
+    ports:
+      - "27000:27000"
+    networks:
+      confincafe:
+        ipv4_address: 192.168.55.2
+networks:
+  confincafe:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.55.0/24

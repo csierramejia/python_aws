@@ -1,0 +1,39 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "address": "KR 1 # 2 - 3",
+        "user": "Sofia",
+        "deliveryDate": "2019-03-01",
+        "products": [
+          {
+            "id": 1,
+            "provider_id": "2"
+          },
+          {
+            "id": 2,
+            "provider_id": "2"
+          }
+        ]
+    },
+    {
+        "id": 2,
+        "priority": 5,
+        "address": "KR 1 # 2 - 3",
+        "user": "Sofia",
+        "deliveryDate": "2019-03-01",
+        "products": [
+          {
+            "id": 4,
+            "provider_id": "1"
+          }
+        ]
+    },
+    {
+        "id": 3,
+        "priority": 2,
+        "address": "CLL 1 # 2 - 6",
+        "user": "Sofia",
+        "deliveryDate": "2019-03-01"
+    }
+]

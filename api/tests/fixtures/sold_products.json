@@ -1,0 +1,42 @@
+[
+    {
+        "product_id": 16,
+        "name": "Acelga",
+        "quantity": 1503
+    },
+    {
+        "product_id": 32,
+        "name": "Curuba",
+        "quantity": 2
+    },
+    {
+        "product_id": 37,
+        "name": "Pan Bimbo",
+        "quantity": 7
+    },
+    {
+        "product_id": 2,
+        "name": "Huevos",
+        "quantity": 21
+    },
+    {
+        "product_id": 5,
+        "name": "Piment\u00f3n Rojo",
+        "quantity": 102
+    },
+    {
+        "product_id": 1,
+        "name": "Leche",
+        "quantity": 1
+    },
+    {
+        "product_id": 3,
+        "name": "Manzana Verde",
+        "quantity": 10
+    },
+    {
+        "product_id": 6,
+        "name": "Kiwi",
+        "quantity": 60
+    }
+]
