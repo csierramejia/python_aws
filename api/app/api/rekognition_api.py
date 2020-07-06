@@ -14,8 +14,10 @@ class RekognitionApi(object):
 
     @flask_request
     def detect_text(self):
-        file = self.request.files["file"]
-        return RekognitionController().detect_text(file)
+        fileF = self.request.files["fileF"]
+        fileA = self.request.files["fileA"]
+        typeDocument = self.request.form["typeDocument"]
+        return RekognitionController().detect_text(fileF, fileA, typeDocument)
 
 
     
