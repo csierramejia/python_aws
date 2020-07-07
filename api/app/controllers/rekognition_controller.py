@@ -23,13 +23,17 @@ class RekognitionController(object):
                                aws_secret_access_key = secret_access_key)
 
         response = client.detect_faces(Image={'Bytes': read},Attributes=['ALL'])
-        return response
+        if response['FaceDetails']:
+            return response['FaceDetails']
+        else:
+            return "no existe face"
+
+        # return response
 
 
     def detect_text(self, fileF, fileA, typeDocument):
         textDetectionsF = self.read_text_image(fileF.read())
         textDetectionsA = self.read_text_image(fileA.read())
-        return textDetectionsF
         rs = self.detect_cc(typeDocument, textDetectionsF, textDetectionsA)
         return rs
 
@@ -88,7 +92,7 @@ class RekognitionController(object):
         elif typeDocument == 'PEP':
             return {
                 'F': ['REPUBLICA','Migracion','Permiso','Especial','de','Permanencia','(PEP)','Cedula','Identidad','de'],
-                'A': ['','','','','','','','','',''] # pendiente por definir el reverso
+                'A': ['REPUBLICA DE COLOMBIA','PASAPORTE','REPUBLICA','COL','P','PASSPORT']
             }
         elif typeDocument == 'CE':
             return {
@@ -97,8 +101,8 @@ class RekognitionController(object):
             }
         elif typeDocument == 'TI':
             return {
-                'F': ['REPUBLICA DE COLOMBIA','IDENTIFICACION','PERSONAL','NOMBRES','APELLIDOS','NUMERO','FIRMA','CEDULA','DE','CIUDADANIA'],
-                'A': ['','','','','','','','','','']
+                'F': ['REPUBLICA DE COLOMBIA','IDENTIFICACION PERSONAL','TARJETA DE IDENTIDAD','NOMBRES','APELLIDOS','TARJETA','FIRMA','CEDULA','DE','IDENTIDAD'],
+                'A': ['LUGAR DE NACIMIENTO','FECHA','DE','NACIMIENTO','DD-MM-YYYY','CIUDAD','LUGAR','SEXO','VENCIMIENTO','EXPEDICION']
             }
         else:
             raise Exception("the type of document is not what was expected")
