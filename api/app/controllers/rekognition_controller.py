@@ -21,55 +21,35 @@ class RekognitionController(object):
         client = boto3.client('rekognition', region_name='us-east-1', 
                                aws_access_key_id = access_key_id, 
                                aws_secret_access_key = secret_access_key)
-                               
-        # response = client.detect_labels(Image={'Bytes': read}, MaxLabels=10)
+
         response = client.detect_faces(Image={'Bytes': read},Attributes=['ALL'])
         return response
-    
 
 
     def detect_text(self, fileF, fileA, typeDocument):
+        textDetectionsF = self.read_text_image(fileF.read())
+        textDetectionsA = self.read_text_image(fileA.read())
+        return textDetectionsF
+        rs = self.detect_cc(typeDocument, textDetectionsF, textDetectionsA)
+        return rs
 
-        readF = fileF.read()
-        readA = fileA.read()
 
+    def read_text_image(self, image):
         access_key_id = 'AKIA33GOATY44F4AFNIE'
         secret_access_key = '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'
         client = boto3.client('rekognition', region_name='us-east-1', 
                                aws_access_key_id = access_key_id, 
                                aws_secret_access_key = secret_access_key)
-        responseF = client.detect_text(Image={'Bytes': readF})
-        responseA = client.detect_text(Image={'Bytes': readA})
-        textDetectionsF = responseF['TextDetections']
-        textDetectionsA = responseA['TextDetections']
+        response = client.detect_text(Image={'Bytes': image})
+        return response['TextDetections']
 
-        if typeDocument == 'CC':
-            rs = self.detect_cc(typeDocument, textDetectionsF, textDetectionsA)
-        elif typeDocument == 'PEP':
-            rs = self.detect_cc(typeDocument, textDetectionsF, textDetectionsA)
-            # rs = self.detect_pep(typeDocument, textDetections)
-        elif typeDocument == 'CE':
-            rs = self.detect_cc(typeDocument, textDetectionsF, textDetectionsA)
-            # rs = self.detect_ce(typeDocument, textDetections)
-        elif typeDocument == 'TI':
-            rs = self.detect_cc(typeDocument, textDetectionsF, textDetectionsA)
-            # rs = self.detect_ti(typeDocument, textDetections)
-        else:
-            raise Exception("the type of document is not what was expected")
 
-        return rs
-
-    
-
-    def detect_cc(self, cc, textDetectionsF, textDetectionsA):
-        textDetectF = []
-        textDetectA = []
-        for textF in textDetectionsF:
-            textDetectF.append(textF['DetectedText'])
-        for textA in textDetectionsA:
-            textDetectA.append(textA['DetectedText'])
-        palabrasF = ['REPUBLICA DE COLOMBIA','IDENTIFICACION','PERSONAL','NOMBRES','APELLIDOS','NUMERO','FIRMA','CEDULA','DE','CIUDADANIA']
-        palabrasA = ['ESTATURA','SEXO','INDICE','DERECHO','LUGAR','EXPEDICION','INDICE DERECHO REGISTRADOR NACIONAL','FECHA','DE LUGAR NACIMIENTO','G.S. RH']
+    def detect_cc(self, typeDocument, textDetectionsF, textDetectionsA):
+        textDetectF = self.get_text_array(textDetectionsF)
+        textDetectA = self.get_text_array(textDetectionsA)
+        palabrasFunction = self.get_arrays_f_a(typeDocument)
+        palabrasF = palabrasFunction['F']
+        palabrasA = palabrasFunction['A']
         contF = 0
         for palabraF in palabrasF:
             res = [(indice, string)for indice, string in enumerate(textDetectF) if palabraF in string]
@@ -83,29 +63,47 @@ class RekognitionController(object):
         f = np.array([[contF], [len(palabrasF)]])
         a = np.array([[contA], [len(palabrasA)]])
         s = np.array([[np.mean(f)], [np.mean(a)]])
-
         rsp = np.mean(s)
 
-        if rsp >= 7.5:
+        if rsp >= 8:
             return 1
         else:
             return 0
-        
-        return np.mean(s)
 
-        # return contF
 
     
-    # def detect_pep(self, pep, response):
-    #     return 1
-    
+    def get_text_array(self, textDetections):
+        textDetectI = []
+        for textF in textDetections:
+            textDetectI.append(textF['DetectedText'])
+        return textDetectI
 
-    # def detect_ce(self, ce, response):
-    #     return 1
     
+    def get_arrays_f_a(self, typeDocument):
+        if typeDocument == 'CC':
+            return {
+                'F': ['REPUBLICA DE COLOMBIA','IDENTIFICACION','PERSONAL','NOMBRES','APELLIDOS','NUMERO','FIRMA','CEDULA','DE','CIUDADANIA'],
+                'A': ['ESTATURA','SEXO','INDICE','DERECHO','LUGAR','EXPEDICION','INDICE DERECHO REGISTRADOR NACIONAL','FECHA','DE LUGAR NACIMIENTO','G.S. RH']
+            }
+        elif typeDocument == 'PEP':
+            return {
+                'F': ['REPUBLICA','Migracion','Permiso','Especial','de','Permanencia','(PEP)','Cedula','Identidad','de'],
+                'A': ['','','','','','','','','',''] # pendiente por definir el reverso
+            }
+        elif typeDocument == 'CE':
+            return {
+                'F': ['REPUBLICA DE COLOMBIA','FIRMA','REPUBLICA','CEDULA','DE','EXTRANJERIA','APELLIDOS:','NOMBRES:','NACIONALIDAD:','FIRMA'],
+                'A': ['','','','','','','','','','']
+            }
+        elif typeDocument == 'TI':
+            return {
+                'F': ['REPUBLICA DE COLOMBIA','IDENTIFICACION','PERSONAL','NOMBRES','APELLIDOS','NUMERO','FIRMA','CEDULA','DE','CIUDADANIA'],
+                'A': ['','','','','','','','','','']
+            }
+        else:
+            raise Exception("the type of document is not what was expected")
 
-    # def detect_ti(self, ti, response):
-    #     return 1
+      
 
 
 
