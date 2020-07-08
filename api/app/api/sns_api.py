@@ -8,9 +8,7 @@ class SnsApi(object):
 
     @flask_request
     def send_code_register(self):
-        if "phone" not in self.request.form:
-            raise Exception("Phone is required")
-        return SnsController().send_code_register(self.request.form)
+        return SnsController().send_code_register(self.request.json)
     
 
     @flask_request
