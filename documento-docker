@@ -1,0 +1,8 @@
+// borrar contenedores
+docker rm $(docker ps -qa)
+
+// borrar imagenes
+docker rmi $(docker images -a -q)
+
+// crear imagen
+docker build -t name_images .
