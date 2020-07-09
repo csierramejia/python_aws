@@ -8,6 +8,8 @@ from PIL import Image
 import cv2
 import numpy as np
 import os
+import base64
+import io
 
 class RekognitionController(object):
     def __init__(self):
@@ -31,9 +33,13 @@ class RekognitionController(object):
         # return response
 
 
-    def detect_text(self, fileF, fileA, typeDocument):
-        textDetectionsF = self.read_text_image(fileF.read())
-        textDetectionsA = self.read_text_image(fileA.read())
+    def detect_text(self, json):
+        fileF = base64.b64decode(str(json['frente'])) 
+        fileA = base64.b64decode(str(json['reverso'])) 
+        typeDocument = json['typeDocument']
+        
+        textDetectionsF = self.read_text_image(fileF)
+        textDetectionsA = self.read_text_image(fileA)
         rs = self.detect_cc(typeDocument, textDetectionsF, textDetectionsA)
         return rs
 
