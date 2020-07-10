@@ -15,9 +15,9 @@ class RekognitionController(object):
     def __init__(self):
         self.rekognition_model = RekognitionModel()
 
-    def detect_faces(self, foto):
-
-        read = foto.read()
+    def detect_faces(self, json):
+        # read = foto.read()
+        read = base64.b64decode(str(json['photo'])) 
         access_key_id = 'AKIA33GOATY44F4AFNIE'
         secret_access_key = '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'
         client = boto3.client('rekognition', region_name='us-east-1', 
@@ -28,9 +28,7 @@ class RekognitionController(object):
         if response['FaceDetails']:
             return response['FaceDetails']
         else:
-            return "no existe face"
-
-        # return response
+            return 0
 
 
     def detect_text(self, json):
