@@ -28,5 +28,5 @@ phases:
       - cat imagedefinitions.json
 artifacts:
   files:
-    - apuestas/imagedefinitions.json
+    - api/imagedefinitions.json
   discard-paths: yes
