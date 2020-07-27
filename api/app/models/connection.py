@@ -9,12 +9,12 @@ class DBConnection(object):
 
     class Singleton:
         def __init__(self):
-            # uri = "mongodb://%s" % ("192.168.55.2:27017/appMovil?retryWrites=false")
-            uri = "mongodb://%s:%s@%s" % (
-                 quote_plus("appMovil"),
-                 quote_plus("qwerty123"),
-                 "54.156.37.79:27017/admin?retryWrites=false",
-            )
+            uri = "mongodb://appMovil:qwerty123@docdb-2020-07-27-19-32-14.cp6tryuih0xs.us-east-1.docdb.amazonaws.com:27017/?retryWrites=false"
+            # uri = "mongodb://%s:%s@%s" % (
+            #      quote_plus("appMovil"),
+            #      quote_plus("qwerty123"),
+            #      "54.156.37.79:27017/admin?retryWrites=false",
+            # )
 
             self.connection = MongoClient(uri)["appMovil"]
 

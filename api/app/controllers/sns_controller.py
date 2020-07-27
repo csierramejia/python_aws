@@ -10,7 +10,7 @@ from random import randint, uniform
 from random import randint
 import random
 from bson.objectid import ObjectId
-
+import requests
 import os
 
 class SnsController(object):
@@ -22,31 +22,54 @@ class SnsController(object):
     # al celular del usuario que esta intentando 
     # registrarse un codigo para poder validar el numero del telefono
     def send_code_register(self, phone):
-        
-        access_key_id = 'AKIA33GOATY44F4AFNIE'
-        secret_access_key = '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'
-        code = random.randint(1000,9999)
-        numberPhone = phone['phone']
 
+        url = "https://apitellit.aldeamo.com/SmsiWS/smsSendGet"
+        code = random.randint(1000,9999)
+        message = 'Tu código de validación para el registro en logii es '+str(code)
+        headers = {
+            'authorization': "Basic THVpc19IZXJuYW5kZXo6TDRpU0gzck4yMDIwKg==",
+            'cache-control': "no-cache",
+            'postman-token': "5bc0733b-498c-1ab2-bac6-82fc06ed4221"
+            }
         data = {
             'code' : code,
-            'phone': numberPhone,
+            'phone': phone['phone'],
             'valid': False,
             'dateSave': self.get_timestamp()
         }
 
         if self.sns_model.insert(data):
-            client = boto3.client('sns', region_name='us-east-1', 
-                                   aws_access_key_id = access_key_id, 
-                                   aws_secret_access_key = secret_access_key)
+            querystring = {"mobile":phone['phone'],"country":phone['country'],"message":message,"messageFormat":"1"}
+            response = requests.request("GET", url, headers=headers, params=querystring)
 
-            message = 'Tu código de validación para el registro en logii es '+str(code)
+        return response.text
+
+        # print(response.text)
+        
+        # access_key_id = 'AKIA33GOATY44F4AFNIE'
+        # secret_access_key = '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'
+        # code = random.randint(1000,9999)
+        # numberPhone = phone['phone']
+
+        # data = {
+        #     'code' : code,
+        #     'phone': numberPhone,
+        #     'valid': False,
+        #     'dateSave': self.get_timestamp()
+        # }
+
+        # if self.sns_model.insert(data):
+        #     client = boto3.client('sns', region_name='us-east-1', 
+        #                            aws_access_key_id = access_key_id, 
+        #                            aws_secret_access_key = secret_access_key)
+
+        #     message = 'Tu código de validación para el registro en logii es '+str(code)
                                 
-            response = client.publish(PhoneNumber=phone['phone'], Message=message)
-            return response
+        #     response = client.publish(PhoneNumber=phone['phone'], Message=message)
+        #     return response
 
-        else:
-            raise Exception("Problems savings the code")
+        # else:
+        #     raise Exception("Problems savings the code")
 
 
     # @authos: Luis Hernandez
