@@ -12,6 +12,7 @@ import random
 from bson.objectid import ObjectId
 import requests
 import os
+import http.client
 
 class SnsController(object):
     def __init__(self):
@@ -20,6 +21,19 @@ class SnsController(object):
     # @authos: Luis Hernandez
     # @description: Metodo que se encarga de guardar los codigos enviados al usuario
     def send_code_register(self, phone):
+
+        conn = http.client.HTTPSConnection("apitellit.aldeamo.com")
+        code = random.randint(1000, 9999)
+        message = 'Tu código de validación para el registro en logii es '+str(code)
+        payload = "{  \n \"country\": \""+phone['code']+"\",\n \"message\": \""+message+"\",\n \"encoding\": \"GSM7\",\n \"messageFormat\": 1,\n \"addresseeList\": [\n    {\n      \"mobile\": \""+phone['phone']+"\",\n      \"correlationLabel\": \"test\"\n    }\n ]\n}"
+
+        headers = {
+            'authorization': "Basic THVpc19IZXJuYW5kZXo6TDRpU0gzck4yMDIwKg==",
+            'content-type': "application/json",
+            'cache-control': "no-cache",
+            'postman-token': "08037200-7d41-ddb0-33ec-ca1a727ef5a7"
+        }
+
         data = {
             'code' : phone['code'],
             'phone': phone['phone'],
@@ -28,7 +42,10 @@ class SnsController(object):
         }
 
         if self.sns_model.insert(data):
-            return 1
+            conn.request("POST", "/SmsiWS/smsSendPost", payload, headers)
+            res = conn.getresponse()
+            data = res.read()
+            return data
         else:
             raise Exception("Problems savings the code")
 

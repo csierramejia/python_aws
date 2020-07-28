@@ -11,3 +11,4 @@ scipy
 boto3
 Pillow
 opencv-contrib-python
+python-http-client
