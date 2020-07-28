@@ -22,7 +22,7 @@ class SnsController(object):
     # @authos: Luis Hernandez
     # @description: Metodo que se encarga de guardar los codigos enviados al usuario
     def send_code_register(self, phone):
-        url = "https://apitellit.aldeamo.com/SmsiWS/smsSendPost/"
+        conn = http.client.HTTPSConnection("apitellit.aldeamo.com")
         code = random.randint(1000, 9999)
         message = 'Tu código de validación para el registro en logii es '+str(code)
         payload = {
