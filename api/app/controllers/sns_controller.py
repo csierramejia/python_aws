@@ -14,10 +14,12 @@ import requests
 import os
 import http.client
 import json
+from pg import DB
 
 class SnsController(object):
     def __init__(self):
         self.sns_model = SnsModel()
+        self.db = DB(dbname='DBDLLO', host='clusterdbdllo.cluster-cbg8artgeyju.us-east-2.rds.amazonaws.com', port=5432, user='core_application', passwd='c0r3_4ppl1c4t10n')
 
     # @authos: Luis Hernandez
     # @description: Metodo que se encarga de guardar los codigos enviados al usuario
@@ -43,14 +45,8 @@ class SnsController(object):
             'content-type': "application/json",
             'cache-control': "no-cache",
             'postman-token': "28b856c7-4219-a084-4e5a-8c9899f13170"
-            }
-        data = {
-            'code' : phone['code'],
-            'phone': phone['phone'],
-            'valid': False,
-            'dateSave': self.get_timestamp()
         }
-        if self.sns_model.insert(data):
+        if int(self.db.query("INSERT INTO sms_codigo VALUES ("+str(code)+", "+str(phone['phone'])+", "+str(False)+", "+str(self.get_timestamp())+")")):
             conn.request("POST", "/SmsiWS/smsSendPost", payloadStr, headers)
             res = conn.getresponse()
             data = res.read()
@@ -67,16 +63,10 @@ class SnsController(object):
 
     
     # @authos: Luis Hernandez
-    # @description: Metodo que devuelve la fecha y hora en formato int
+    # @description: Metodo que se encarga de buscar y validar el codigo
     def valid_code(self, code):
-        
-        query = [
-            {"$match": {"code": int(code), "valid": False}},
-        ]
-        data = self.sns_model.get_account(query)
-        if data:
-            self.sns_model.update({"_id": ObjectId(data[0].get('_id'))}, {"valid":True})
-            return 1
+        if len(self.db.query("SELECT codigo, validacion FROM sms_codigo WHERE codigo = '"+str(code)+"' AND validacion = "+str(False)+" ")) == 1:
+            return int(self.db.query("UPDATE sms_codigo SET validacion = '"+str(True)+"' WHERE codigo = '"+str(code)+"'"))
         else:
             return 0
         
