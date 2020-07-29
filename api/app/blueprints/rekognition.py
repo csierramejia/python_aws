@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from api.rekognition_api import RekognitionApi
 
 bp = Blueprint(
-    "rekognition", __name__, url_prefix="/rekognition"
+    "rekognition", __name__, url_prefix="/ai/rekognition"
 )
 
 

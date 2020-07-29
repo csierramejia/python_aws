@@ -32,7 +32,7 @@ class RekognitionController(object):
 
 
     def detect_text(self, json):
-        return 2
+        return "here testing gateway detect text"
         fileF = base64.b64decode(str(json['frente'])) 
         fileA = base64.b64decode(str(json['reverso'])) 
         typeDocument = json['typeDocument']
