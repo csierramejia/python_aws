@@ -4,6 +4,8 @@ WORKDIR /app
 
 ADD . /app
 
+COPY app /app
+
 RUN pip install --upgrade pip
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
 

@@ -32,13 +32,29 @@ class RekognitionController(object):
 
 
     def detect_text(self, json):
+        return 2
         fileF = base64.b64decode(str(json['frente'])) 
         fileA = base64.b64decode(str(json['reverso'])) 
         typeDocument = json['typeDocument']
         
         textDetectionsF = self.read_text_image(fileF)
+
+        
+
+        return textDetectionsF
         textDetectionsA = self.read_text_image(fileA)
         rs = self.detect_cc(typeDocument, textDetectionsF, textDetectionsA)
+
+        # if rs:
+        #     if typeDocument == 'CC':
+        #         dataUser = {
+        #             name: textDetectionsF[2]
+        #             last_name: textDetectionsF[4]
+        #             numberIdentificaction: textDetectionsF[11]
+        #         }
+        #     elif expression:
+        #         pass
+
         return rs
 
 

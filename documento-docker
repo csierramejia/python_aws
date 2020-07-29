@@ -11,3 +11,7 @@ docker build -t name_images .
 // levantar el docker python flask
 docker run -it -v /home/ubuntu/python_aws/api/app:/app --restart always --name api_flask3 -p 5000:5000 name_images
 
+
+
+docker run --publish 5000:5000 --detach --name api_flask3 name_images
+
