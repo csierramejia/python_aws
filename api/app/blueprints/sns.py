@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from api.sns_api import SnsApi
 
 bp = Blueprint(
-    "sns", __name__, url_prefix="/ai/sns"
+    "sns", __name__, url_prefix="/registro/sns"
 )
 
 
