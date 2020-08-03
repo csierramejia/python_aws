@@ -15,6 +15,3 @@ python-http-client
 PyGreSQL
 sshtunnel
 psycopg2
-spacy
-nltk
-polyglot
