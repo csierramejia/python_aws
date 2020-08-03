@@ -15,6 +15,8 @@ import os
 import http.client
 import json
 from pg import DB
+import psycopg2
+from sshtunnel import SSHTunnelForwarder
 
 class SnsController(object):
     def __init__(self):
@@ -22,32 +24,25 @@ class SnsController(object):
         self.db = DB(dbname='DBDLLO', host='jerdevrds01.cwf68ralqtsp.us-east-1.rds.amazonaws.com', port=5432, user='administrator', passwd='123456789')
 
     # @authos: Luis Hernandez
-    # @description: Metodo que se encarga de guardar los codigos enviados al usuario
+    # @description: Metodo que se encarga de guardar y enviar el codigo de validacion
     def send_code_register(self, phone):
-        conn = http.client.HTTPSConnection("apitellit.aldeamo.com")
+        conn = http.client.HTTPSConnection("api.messaging-service.com")
         code = random.randint(1000, 9999)
         message = 'Tu código de validación para el registro en logii es '+str(code)
         payload = {
-            "country": phone['code'],
-            "message": message,
-            "encoding": "GSM7",
-            "messageFormat": 1,
-            "addresseeList": [
-                {
-                "mobile": phone['phone'],
-                "correlationLabel": "test",
-                }
-            ]
+            "from":"logii",
+            "to": phone['code']+phone['phone'],
+            "text": message
         }
         payloadStr =  json.dumps(payload)
         headers = {
-            'authorization': "Basic THVpc19IZXJuYW5kZXo6TDRpU0gzck4yMDIwKg==",
+            'authorization': "Basic a29uZXhpbm5vdmF0aW9uOktvbmV4X3NtczIwMjAu",
             'content-type': "application/json",
             'cache-control': "no-cache",
             'postman-token': "28b856c7-4219-a084-4e5a-8c9899f13170"
         }
         if int(self.db.query("INSERT INTO sms_codigo VALUES ("+str(code)+", "+str(phone['phone'])+", "+str(False)+", "+str(self.get_timestamp())+")")):
-            conn.request("POST", "/SmsiWS/smsSendPost", payloadStr, headers)
+            conn.request("POST", "/sms/1/text/single", payloadStr, headers)
             res = conn.getresponse()
             data = res.read()
             return data
@@ -61,7 +56,7 @@ class SnsController(object):
         now = datetime.now()
         return int(datetime.timestamp(now))
 
-    
+
     # @authos: Luis Hernandez
     # @description: Metodo que se encarga de buscar y validar el codigo
     def valid_code(self, code):

@@ -10,6 +10,9 @@ import numpy as np
 import os
 import base64
 import io
+import re
+
+
 
 class RekognitionController(object):
     def __init__(self):
@@ -30,32 +33,116 @@ class RekognitionController(object):
         else:
             return 0
 
-
+    
     def detect_text(self, json):
-        return "here testing gateway detect text"
         fileF = base64.b64decode(str(json['frente'])) 
         fileA = base64.b64decode(str(json['reverso'])) 
         typeDocument = json['typeDocument']
-        
         textDetectionsF = self.read_text_image(fileF)
-
-        
-
-        return textDetectionsF
         textDetectionsA = self.read_text_image(fileA)
         rs = self.detect_cc(typeDocument, textDetectionsF, textDetectionsA)
+        information_extracted = []
+        if rs == 1:
+            data = self.clean_text(textDetectionsF)
+            for row in data:
+                information_extracted.append(row['DetectedText'])
+            return self.clean_advance_text(information_extracted)
+        else:
+            return rs
 
-        # if rs:
-        #     if typeDocument == 'CC':
-        #         dataUser = {
-        #             name: textDetectionsF[2]
-        #             last_name: textDetectionsF[4]
-        #             numberIdentificaction: textDetectionsF[11]
-        #         }
-        #     elif expression:
-        #         pass
 
-        return rs
+    def clean_text(self, textDetectionsF):
+        lines = []
+        linesClean = []
+        linesCleanText = []
+        for row in textDetectionsF:
+            if row.get("Type") == "LINE":
+                lines.append(row)
+        for row in lines:
+            if row.get("DetectedText").isupper():
+                linesClean.append(row)
+        return linesClean
+    
+
+    def clean_advance_text(self, information_extracted):
+        dictionary = self.data_dictionary_info()
+        clean_info = []
+        for row in information_extracted:
+            exist = 0
+            for row_dictionary in dictionary:
+                if row.find(row_dictionary) != -1: 
+                    exist = 1
+            if exist == 0:
+                clean_info.append(row)
+
+        search_finish = self.search_number_document(clean_info)
+        clean_info.append(search_finish)
+        clean_info = self.clean_advance_text_number(clean_info)
+        return clean_info
+    
+
+
+
+    def clean_advance_text_number(self, search_finish):
+        dictionary = self.data_dictionary_info_two()
+        clean_info = []
+        for row in search_finish:
+            exist = 0
+            for row_dictionary in dictionary:
+                if row.find(row_dictionary) != -1: 
+                    exist = 1
+            if exist == 0:
+                clean_info.append(row)
+        return clean_info
+
+
+
+    def search_number_document(self, info):
+        result = []
+        for row in info:
+            rs = re.findall(r'\d+', row)
+            if len(rs) > 0:
+                result = rs
+                break
+        d = ''
+        if len(result) > 1:
+            for w in result:
+                d = d + w
+            return d
+        else:
+            return result[0]
+
+
+    def data_dictionary_info(self):
+        data_dictionary = [
+            'REPUBLICA', 
+            'republica', 
+            'COLOMBIA', 
+            'colombia', 
+            'IDENTIFICACION', 
+            'identificacion', 
+            'PERSONAL', 
+            'personal',
+            'CEDULA',
+            'cedula',
+            'CIUDADANIA',
+            'ciudadania',
+            'APELLIDOS',
+            'apellidos',
+            'NOMBRES',
+            'nombres'
+        ]
+        return data_dictionary
+    
+
+
+    def data_dictionary_info_two(self):
+        data_dictionary = [
+            'NUMERO', 
+            'numero'
+        ]
+        return data_dictionary
+
 
 
     def read_text_image(self, image):

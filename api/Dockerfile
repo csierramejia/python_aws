@@ -8,6 +8,8 @@ COPY app /app
 
 RUN pip install --upgrade pip
 RUN pip install --trusted-host pypi.python.org -r requirements.txt
+RUN pip install -U spacy && python3 -m spacy download es
+RUN python -c "import nltk; nltk.download('punkt'); nltk.download('averaged_perceptron_tagger'); nltk.download('maxent_ne_chunker'); nltk.download('words')"
 
 ENV PYTHONPATH /app/
 

@@ -15,3 +15,13 @@ docker run -it -v /home/ubuntu/python_aws/api/app:/app --restart always --name a
 
 docker run --publish 5000:5000 --detach --name api_flask3 name_images
 
+
+
+TUNNEL SSH
+
+tunnel host ---> 54.175.112.237
+tunnel port ---> 22
+username    ---> ec2-user
+
+authentication ---> import .perm
+
