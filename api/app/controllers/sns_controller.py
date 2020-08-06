@@ -22,6 +22,7 @@ class SnsController(object):
     def __init__(self):
         self.sns_model = SnsModel()
         # self.db = DB(dbname='DBDLLO', host='jerdevrds01.cwf68ralqtsp.us-east-1.rds.amazonaws.com', port=5432, user='administrator', passwd='123456789')
+        self.db = DB(dbname='DBDLLO', host='instancedbdllo.cbg8artgeyju.us-east-2.rds.amazonaws.com', port=5432, user='core_application', passwd='c0r3_4ppl1c4t10n')
 
     # @authos: Luis Hernandez
     # @description: Metodo que se encarga de guardar y enviar el codigo de validacion
@@ -60,11 +61,11 @@ class SnsController(object):
     # @authos: Luis Hernandez
     # @description: Metodo que se encarga de buscar y validar el codigo
     def valid_code(self, code):
-        return "here testing valid code"
-        # if len(self.db.query("SELECT codigo, validacion FROM sms_codigo WHERE codigo = '"+str(code)+"' AND validacion = "+str(False)+" ")) == 1:
-        #     return int(self.db.query("UPDATE sms_codigo SET validacion = '"+str(True)+"' WHERE codigo = '"+str(code)+"'"))
-        # else:
-        #     return 0
+        # return "here testing valid code"
+        if len(self.db.query("SELECT codigo, validacion FROM sms_codigo WHERE codigo = '"+str(code)+"' AND validacion = "+str(False)+" ")) == 1:
+            return int(self.db.query("UPDATE sms_codigo SET validacion = '"+str(True)+"' WHERE codigo = '"+str(code)+"'"))
+        else:
+            return 0
         
         
 
