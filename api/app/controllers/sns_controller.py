@@ -46,10 +46,7 @@ class SnsController(object):
             conn.request("POST", "/sms/1/text/single", payloadStr, headers)
             res = conn.getresponse()
             data = res.read()
-            return {
-                    "status": 200,
-                    "message": "codigo entregado"
-            }
+            return 1
         else:
             raise Exception("Problems savings the code")
 
