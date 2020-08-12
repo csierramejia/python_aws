@@ -20,4 +20,11 @@ def valid_code(code):
 
 
 
+@bp.route("/", methods=["GET"])
+@cross_origin()
+def helloWorld():
+  return "Hello, cross-origin-world!"
+
+
+
 
