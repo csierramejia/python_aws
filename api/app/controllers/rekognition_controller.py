@@ -5,7 +5,6 @@ from helpers.utils import transformation_fields_associated
 from datetime import date
 import boto3
 from PIL import Image
-# import cv2
 import numpy as np
 import os
 import base64

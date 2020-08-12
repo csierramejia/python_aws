@@ -17,10 +17,5 @@ def valid_code(code):
 
 
 
-@bp.route("/", methods=["GET"])
-def helloWorld():
-  return "Hello, cross-origin-world cors enabled python!"
-
-
 
 

@@ -10,5 +10,4 @@ def create_app():
     app.register_blueprint(rekognition.bp)
     app.register_blueprint(sns.bp)
 
-
     return app
