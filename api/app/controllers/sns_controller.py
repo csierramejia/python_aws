@@ -5,7 +5,7 @@ from helpers.utils import transformation_fields_associated
 from datetime import datetime, date, timedelta
 import boto3
 from PIL import Image
-import cv2
+# import cv2
 from random import randint, uniform
 from random import randint
 import random
@@ -43,9 +43,9 @@ class SnsController(object):
             'postman-token': "28b856c7-4219-a084-4e5a-8c9899f13170"
         }
         if int(self.db.query("INSERT INTO sms_codigo VALUES ("+str(code)+", "+str(phone['phone'])+", "+str(False)+", "+str(self.get_timestamp())+")")):
-            conn.request("POST", "/sms/1/text/single", payloadStr, headers)
-            res = conn.getresponse()
-            data = res.read()
+            # conn.request("POST", "/sms/1/text/single", payloadStr, headers)
+            # res = conn.getresponse()
+            # data = res.read()
             return 1
         else:
             raise Exception("Problems savings the code")
