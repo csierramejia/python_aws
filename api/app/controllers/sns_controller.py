@@ -17,6 +17,7 @@ import json
 from pg import DB
 import psycopg2
 from sshtunnel import SSHTunnelForwarder
+from twilio.rest import Client
 
 class SnsController(object):
     def __init__(self):
