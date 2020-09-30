@@ -62,8 +62,9 @@ class SnsController(object):
     # @description: Metodo que se encarga de buscar y validar el codigo
     def valid_code(self, code):
         # return "here testing valid code"
-        if len(self.db.query("SELECT codigo, validacion FROM sms_codigo WHERE codigo = '"+str(code)+"' AND validacion = "+str(False)+" ")) == 1:
-            return int(self.db.query("UPDATE sms_codigo SET validacion = '"+str(True)+"' WHERE codigo = '"+str(code)+"'"))
+        if len(self.db.query("SELECT codigo, validacion FROM sms_codigo WHERE codigo = '"+str(code)+"' ")) == 1:
+            self.db.query("UPDATE sms_codigo SET validacion = '"+str(True)+"' WHERE codigo = '"+str(code)+"'")
+            return 1
         else:
             return 0
         
