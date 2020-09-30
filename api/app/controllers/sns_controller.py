@@ -27,25 +27,40 @@ class SnsController(object):
     # @authos: Luis Hernandez
     # @description: Metodo que se encarga de guardar y enviar el codigo de validacion
     def send_code_register(self, phone):
-        conn = http.client.HTTPSConnection("api.messaging-service.com")
+        # conn = http.client.HTTPSConnection("api.messaging-service.com")
+        # code = random.randint(1000, 9999)
+        # message = 'Tu código de validación para el registro en logii es '+str(code)
+        # payload = {
+        #     "from":"logii",
+        #     "to": phone['code']+phone['phone'],
+        #     "text": message
+        # }
+        # payloadStr =  json.dumps(payload)
+        # headers = {
+        #     'authorization': "Basic a29uZXhpbm5vdmF0aW9uOktvbmV4X3NtczIwMjAu",
+        #     'content-type': "application/json",
+        #     'cache-control': "no-cache",
+        #     'postman-token': "28b856c7-4219-a084-4e5a-8c9899f13170"
+        # }
+
+        # if int(self.db.query("INSERT INTO sms_codigo VALUES ("+str(code)+", "+str(phone['phone'])+", "+str(False)+", "+str(self.get_timestamp())+")")):
+        #     conn.request("POST", "/sms/1/text/single", payloadStr, headers)
+        #     res = conn.getresponse()
+        #     data = res.read()
+        #     return 1
+
+        account_sid = 'AC587ffa7d668e9bf3e37a554eb47015e3'
+        auth_token = 'a41063cd478cd9f7a97a719a34e1f60f'
+        client = Client(account_sid, auth_token)
         code = random.randint(1000, 9999)
         message = 'Tu código de validación para el registro en logii es '+str(code)
-        payload = {
-            "from":"logii",
-            "to": phone['code']+phone['phone'],
-            "text": message
-        }
-        payloadStr =  json.dumps(payload)
-        headers = {
-            'authorization': "Basic a29uZXhpbm5vdmF0aW9uOktvbmV4X3NtczIwMjAu",
-            'content-type': "application/json",
-            'cache-control': "no-cache",
-            'postman-token': "28b856c7-4219-a084-4e5a-8c9899f13170"
-        }
+
         if int(self.db.query("INSERT INTO sms_codigo VALUES ("+str(code)+", "+str(phone['phone'])+", "+str(False)+", "+str(self.get_timestamp())+")")):
-            conn.request("POST", "/sms/1/text/single", payloadStr, headers)
-            res = conn.getresponse()
-            data = res.read()
+            mess = client.messages.create(
+                                body=message,
+                                from_='+12016544164',
+                                to='+'+phone['code']+phone['phone']
+                            )
             return 1
         else:
             raise Exception("Problems savings the code")
