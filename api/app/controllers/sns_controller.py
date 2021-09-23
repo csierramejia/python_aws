@@ -23,7 +23,7 @@ class SnsController(object):
     def __init__(self):
         self.sns_model = SnsModel()
         # self.db = DB(dbname='DBDLLO', host='jerdevrds01.cwf68ralqtsp.us-east-1.rds.amazonaws.com', port=5432, user='administrator', passwd='123456789')
-        self.db = DB(dbname='DBDLLO', host='jerdevrds01.cwf68ralqtsp.us-east-1.rds.amazonaws.com', port=5432, user='core_application', passwd='c0r3_4ppl1c4t10n')
+        self.db = DB(dbname='DBDLLO', host='logiiblue-db-cluster.cluster-czj90e0hs7ck.us-east-1.rds.amazonaws.com', port=5432, user='core_application', passwd='c0r3_4ppl1c4t10n')
 
     # @authos: Luis Hernandez
     # @description: Metodo que se encarga de guardar y enviar el codigo de validacion
