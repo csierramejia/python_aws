@@ -3,20 +3,13 @@ import csv
 from models import SnsModel
 from helpers.utils import transformation_fields_associated
 from datetime import datetime, date, timedelta
-import boto3
-from PIL import Image
 # import cv2
 from random import randint, uniform
-from random import randint
 import random
-from bson.objectid import ObjectId
-import requests
 import os
 import http.client
 import json
 from pg import DB
-import psycopg2
-from sshtunnel import SSHTunnelForwarder
 from twilio.rest import Client
 
 class SnsController(object):
@@ -28,43 +21,20 @@ class SnsController(object):
     # @authos: Luis Hernandez
     # @description: Metodo que se encarga de guardar y enviar el codigo de validacion
     def send_code_register(self, phone):
-        # conn = http.client.HTTPSConnection("api.messaging-service.com")
-        # code = random.randint(1000, 9999)
-        # message = 'Tu código de validación para el registro en logii es '+str(code)
-        # payload = {
-        #     "from":"logii",
-        #     "to": phone['code']+phone['phone'],
-        #     "text": message
-        # }
-        # payloadStr =  json.dumps(payload)
-        # headers = {
-        #     'authorization': "Basic a29uZXhpbm5vdmF0aW9uOktvbmV4X3NtczIwMjAu",
-        #     'content-type': "application/json",
-        #     'cache-control': "no-cache",
-        #     'postman-token': "28b856c7-4219-a084-4e5a-8c9899f13170"
-        # }
-
-        # if int(self.db.query("INSERT INTO sms_codigo VALUES ("+str(code)+", "+str(phone['phone'])+", "+str(False)+", "+str(self.get_timestamp())+")")):
-        #     conn.request("POST", "/sms/1/text/single", payloadStr, headers)
-        #     res = conn.getresponse()
-        #     data = res.read()
-        #     return 1
-
-        account_sid = 'AC587ffa7d668e9bf3e37a554eb47015e3'
-        auth_token = 'f974b33308d809f9d72077f31490fb61'
+        account_sid = 'AC45411c1382f30aa3681f3537e5622191'
+        auth_token = 'f00e636a91f70f409a130a00704e0d0a'
         client = Client(account_sid, auth_token)
-
         # auth_token = '[AuthToken]' 
-
-        code = random.randint(1000, 9999)
-        message = 'Tu código de validación para el registro en logii es '+str(code)
-
+        code = random.randint(1000, 9999) # random number generator
+        mess = 'Tu código de validación para el registro en logii es '+str(code)
+        # validate yes insert code in database
         if int(self.db.query("INSERT INTO sms_codigo VALUES ("+str(code)+", "+str(phone['phone'])+", "+str(False)+", "+str(self.get_timestamp())+")")):
-            mess = client.messages.create(
-                                body=message,
-                                from_='+12016544164',
-                                to='+'+phone['code']+phone['phone']
-                            )
+            message = client.messages \
+                .create(
+                    body=mess,
+                    from_='+19122078959',
+                    to='+'+phone['code']+phone['phone']
+                )
             return 1
         else:
             raise Exception("Problems savings the code")

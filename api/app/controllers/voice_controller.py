@@ -27,8 +27,8 @@ class VoiceController(object):
     # @authos: Luis Hernandez
     # @description: Metodo que se encarga de guardar y enviar el codigo de validacion via telefonicamente
     def send_code_register(self, phone):
-        account_sid = 'AC587ffa7d668e9bf3e37a554eb47015e3'
-        auth_token = 'f974b33308d809f9d72077f31490fb61'
+        account_sid = 'AC45411c1382f30aa3681f3537e5622191'
+        auth_token = 'f00e636a91f70f409a130a00704e0d0a'
         client = Client(account_sid, auth_token)
         code = random.randint(1000, 9999)
         message = 'Tu código de validación para el registro en logii es '+str(code)
@@ -37,7 +37,7 @@ class VoiceController(object):
             call = client.calls.create(
                                 twiml='<Response><Say voice="woman" language="es">'+message+'</Say></Response>',
                                 to='+'+phone['code']+phone['phone'],
-                                from_='+12016544164'
+                                from_='+19122078959'
                             )
             return 1
         else:
